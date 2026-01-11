@@ -17,49 +17,49 @@
   width: 100%;
   height: 100%;
   transform-style: preserve-3d;
-  transition: transform 0.8s ease;
+  transition: transform 1s ease;
 }
 
 /* ===========================================
-   ANIMATION STATES
+   ANIMATION STATES - CONTAINER TRANSFORMS
    =========================================== */
 
-/* CLOSED - show cover at normal size */
+/* CLOSED - card at normal size */
 .card-container.closed {
   transform: scale(1);
 }
 
-/* OPENING - scale down slightly as we transition to pages */
+/* OPENING - scale down and shift to show the opening effect */
 .card-container.opening {
-  transform: scale(0.6);
+  transform: scale(0.55) translateX(-45%);
 }
 
-/* OPEN - show two-page spread scaled to fit */
+/* OPEN - two pages visible, nicely centered */
 .card-container.open {
-  transform: scale(0.5);
+  transform: scale(0.5) translateX(-50%);
 }
 
 /* FOCUS LEFT - zoom into left page only */
 .card-container.focus-left {
-  transform: scale(1) translateX(50%);
+  transform: scale(0.95) translateX(0%);
 }
 
 /* FOCUS RIGHT - zoom into right page only */
 .card-container.focus-right {
-  transform: scale(1) translateX(-50%);
+  transform: scale(0.95) translateX(-100%);
 }
 
-/* FULL VIEW - zoom out to see both pages */
+/* FULL VIEW - zoom out to see both pages before closing */
 .card-container.full-view {
-  transform: scale(0.5);
+  transform: scale(0.5) translateX(-50%);
 }
 
-/* CLOSING - return to normal scale */
+/* CLOSING - keep same position while cover closes */
 .card-container.closing {
-  transform: scale(1);
+  transform: scale(0.55) translateX(-45%);
 }
 
-/* SHOW BACK - flip the card */
+/* SHOW BACK - back to center, then flip */
 .card-container.show-back {
   transform: scale(1);
 }
@@ -68,7 +68,7 @@
   transform: rotateY(180deg);
 }
 
-/* FLIP TO COVER - flip back to front */
+/* FLIP TO COVER - flip back to show front */
 .card-container.flip-to-cover {
   transform: scale(1);
 }
@@ -78,183 +78,44 @@
 }
 
 /* ===========================================
-   COVER (FRONT OF CARD)
-   =========================================== */
-
-.card-cover {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background: #ffffff;
-  border-radius: 6px;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15);
-  overflow: hidden;
-  backface-visibility: hidden;
-  transition: opacity 0.5s ease, visibility 0s ease 0.5s;
-  z-index: 10;
-}
-
-.card-cover.visible {
-  opacity: 1;
-  visibility: visible;
-  transition: opacity 0.5s ease, visibility 0s ease 0s;
-}
-
-.card-cover.hidden {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-}
-
-/* Cover content */
-.card-content {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  padding: 30px;
-  box-sizing: border-box;
-  position: relative;
-}
-
-.card-gold-spray {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 150px;
-  background: 
-    radial-gradient(circle at 20% 30%, rgba(212, 168, 83, 0.8) 1.5px, transparent 1.5px),
-    radial-gradient(circle at 40% 20%, rgba(212, 168, 83, 0.6) 2px, transparent 2px),
-    radial-gradient(circle at 60% 35%, rgba(212, 168, 83, 0.7) 1.2px, transparent 1.2px),
-    radial-gradient(circle at 80% 25%, rgba(212, 168, 83, 0.5) 1.8px, transparent 1.8px),
-    radial-gradient(circle at 30% 45%, rgba(212, 168, 83, 0.65) 1.3px, transparent 1.3px),
-    radial-gradient(circle at 70% 40%, rgba(212, 168, 83, 0.55) 1.6px, transparent 1.6px);
-  background-size: 40px 40px, 50px 50px, 35px 35px, 45px 45px, 38px 38px, 42px 42px;
-  pointer-events: none;
-}
-
-.card-header {
-  margin-bottom: auto;
-}
-
-.card-logo-area {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  margin-bottom: 8px;
-}
-
-.logo-text {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 3px;
-  color: #1a1a1a;
-  line-height: 1.3;
-}
-
-.card-greeting {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 4px;
-  color: #666;
-  margin-top: 10px;
-}
-
-.card-visual {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-}
-
-.card-year {
-  display: flex;
-  gap: 8px;
-  z-index: 2;
-}
-
-.year-digit {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 72px;
-  font-weight: 700;
-  color: #1a1a1a;
-  line-height: 1;
-}
-
-.year-digit-faded {
-  color: rgba(26, 26, 26, 0.3);
-}
-
-/* Chrome blobs on cover */
-.chrome-blob {
-  position: absolute;
-  border-radius: 50%;
-  background: radial-gradient(
-    ellipse at 30% 30%,
-    rgba(255, 255, 255, 1) 0%,
-    rgba(200, 200, 200, 0.9) 30%,
-    rgba(150, 150, 150, 0.8) 60%,
-    rgba(100, 100, 100, 0.6) 100%
-  );
-  box-shadow: 
-    inset -10px -10px 20px rgba(255, 255, 255, 0.9),
-    inset 8px 8px 15px rgba(0, 0, 0, 0.15),
-    0 5px 20px rgba(100, 100, 100, 0.3);
-}
-
-.chrome-blob-1 {
-  width: 80px;
-  height: 70px;
-  top: 20%;
-  right: 15%;
-}
-
-.chrome-blob-2 {
-  width: 60px;
-  height: 55px;
-  bottom: 25%;
-  left: 10%;
-}
-
-.chrome-blob-3 {
-  width: 50px;
-  height: 45px;
-  bottom: 15%;
-  right: 25%;
-}
-
-/* ===========================================
-   INSIDE PAGES (TWO-PAGE SPREAD)
+   INSIDE PAGES (behind the cover)
    =========================================== */
 
 .card-pages {
   position: absolute;
   width: 200%;
   height: 100%;
-  left: -50%;
+  left: 0;
   top: 0;
   display: flex;
   border-radius: 6px;
   overflow: hidden;
   box-shadow: 0 4px 40px rgba(0, 0, 0, 0.15);
-  transition: opacity 0.5s ease, visibility 0s ease 0.5s;
-  z-index: 5;
-}
-
-.card-pages.visible {
-  opacity: 1;
-  visibility: visible;
-  transition: opacity 0.5s ease, visibility 0s ease 0s;
-}
-
-.card-pages.hidden {
+  z-index: 1;
+  background: #ffffff;
   opacity: 0;
   visibility: hidden;
-  pointer-events: none;
+  transition: opacity 0.3s ease, visibility 0s ease 0.3s;
+}
+
+/* Show pages when card is opening, open, or closing (to see cover flip over them) */
+.card-container.opening .card-pages,
+.card-container.open .card-pages,
+.card-container.focus-left .card-pages,
+.card-container.focus-right .card-pages,
+.card-container.full-view .card-pages,
+.card-container.closing .card-pages {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.3s ease, visibility 0s ease 0s;
+}
+
+/* Hide pages after cover closes */
+.card-container.show-back .card-pages,
+.card-container.flip-to-cover .card-pages {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0s ease 0.3s;
 }
 
 /* Individual pages */
@@ -444,7 +305,203 @@
 }
 
 /* ===========================================
-   CARD BACK
+   COVER - Opens like a book (hinged on left)
+   =========================================== */
+
+.card-cover {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transform-origin: left center;
+  transition: transform 1s ease;
+  z-index: 10;
+}
+
+/* Cover front face (the intro page) */
+.card-cover-front {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  background: #ffffff;
+  border-radius: 6px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+}
+
+/* Cover back face - completely transparent (no 3rd page) */
+.card-cover-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  transform: rotateY(180deg);
+  background: transparent;
+  border-radius: 6px;
+}
+
+/* ===========================================
+   COVER ANIMATION STATES
+   =========================================== */
+
+/* CLOSED - cover flat over pages */
+.card-container.closed .card-cover {
+  transform: rotateY(0deg);
+}
+
+/* OPENING - cover flips open like a book (smooth animation) */
+.card-container.opening .card-cover {
+  transform: rotateY(-180deg);
+  transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* OPEN - cover fully open */
+.card-container.open .card-cover,
+.card-container.focus-left .card-cover,
+.card-container.focus-right .card-cover,
+.card-container.full-view .card-cover {
+  transform: rotateY(-180deg);
+}
+
+/* CLOSING - cover flips back to close (same animation as opening but reversed) */
+.card-container.closing .card-cover {
+  transform: rotateY(0deg);
+  transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* After closing - cover stays closed */
+.card-container.show-back .card-cover,
+.card-container.flip-to-cover .card-cover {
+  transform: rotateY(0deg);
+}
+
+/* ===========================================
+   COVER CONTENT
+   =========================================== */
+
+.card-content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 30px;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.card-gold-spray {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 150px;
+  background: 
+    radial-gradient(circle at 20% 30%, rgba(212, 168, 83, 0.8) 1.5px, transparent 1.5px),
+    radial-gradient(circle at 40% 20%, rgba(212, 168, 83, 0.6) 2px, transparent 2px),
+    radial-gradient(circle at 60% 35%, rgba(212, 168, 83, 0.7) 1.2px, transparent 1.2px),
+    radial-gradient(circle at 80% 25%, rgba(212, 168, 83, 0.5) 1.8px, transparent 1.8px),
+    radial-gradient(circle at 30% 45%, rgba(212, 168, 83, 0.65) 1.3px, transparent 1.3px),
+    radial-gradient(circle at 70% 40%, rgba(212, 168, 83, 0.55) 1.6px, transparent 1.6px);
+  background-size: 40px 40px, 50px 50px, 35px 35px, 45px 45px, 38px 38px, 42px 42px;
+  pointer-events: none;
+}
+
+.card-header {
+  margin-bottom: auto;
+}
+
+.card-logo-area {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.logo-text {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  color: #1a1a1a;
+  line-height: 1.3;
+}
+
+.card-greeting {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 4px;
+  color: #666;
+  margin-top: 10px;
+}
+
+.card-visual {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.card-year {
+  display: flex;
+  gap: 8px;
+  z-index: 2;
+}
+
+.year-digit {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 72px;
+  font-weight: 700;
+  color: #1a1a1a;
+  line-height: 1;
+}
+
+.year-digit-faded {
+  color: rgba(26, 26, 26, 0.3);
+}
+
+/* Chrome blobs on cover */
+.chrome-blob {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at 30% 30%,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(200, 200, 200, 0.9) 30%,
+    rgba(150, 150, 150, 0.8) 60%,
+    rgba(100, 100, 100, 0.6) 100%
+  );
+  box-shadow: 
+    inset -10px -10px 20px rgba(255, 255, 255, 0.9),
+    inset 8px 8px 15px rgba(0, 0, 0, 0.15),
+    0 5px 20px rgba(100, 100, 100, 0.3);
+}
+
+.chrome-blob-1 {
+  width: 80px;
+  height: 70px;
+  top: 20%;
+  right: 15%;
+}
+
+.chrome-blob-2 {
+  width: 60px;
+  height: 55px;
+  bottom: 25%;
+  left: 10%;
+}
+
+.chrome-blob-3 {
+  width: 50px;
+  height: 45px;
+  bottom: 15%;
+  right: 25%;
+}
+
+/* ===========================================
+   CARD BACK (outro page)
    =========================================== */
 
 .card-back {
@@ -455,7 +512,7 @@
   transform: rotateY(180deg);
   background: #1a365d;
   border-radius: 6px;
-  z-index: 1;
+  z-index: 0;
 }
 
 .card-back-content {
@@ -479,13 +536,4 @@
   font-size: 12px;
   letter-spacing: 2px;
   opacity: 0.7;
-}
-
-/* ===========================================
-   ANIMATIONS
-   =========================================== */
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
 }
