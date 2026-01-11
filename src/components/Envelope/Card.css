@@ -1,0 +1,491 @@
+/* Card container - handles zoom and focus animations */
+.card-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  perspective: 2000px;
+  transition: transform 0.8s ease;
+}
+
+.card-container.envelope-gone {
+  cursor: default;
+}
+
+/* Card book - the 3D structure */
+.card-book {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.8s ease;
+}
+
+/* ===========================================
+   ANIMATION STATES
+   =========================================== */
+
+/* CLOSED - show cover at normal size */
+.card-container.closed {
+  transform: scale(1);
+}
+
+/* OPENING - scale down slightly as we transition to pages */
+.card-container.opening {
+  transform: scale(0.6);
+}
+
+/* OPEN - show two-page spread scaled to fit */
+.card-container.open {
+  transform: scale(0.5);
+}
+
+/* FOCUS LEFT - zoom into left page only */
+.card-container.focus-left {
+  transform: scale(1) translateX(50%);
+}
+
+/* FOCUS RIGHT - zoom into right page only */
+.card-container.focus-right {
+  transform: scale(1) translateX(-50%);
+}
+
+/* FULL VIEW - zoom out to see both pages */
+.card-container.full-view {
+  transform: scale(0.5);
+}
+
+/* CLOSING - return to normal scale */
+.card-container.closing {
+  transform: scale(1);
+}
+
+/* SHOW BACK - flip the card */
+.card-container.show-back {
+  transform: scale(1);
+}
+
+.card-container.show-back .card-book {
+  transform: rotateY(180deg);
+}
+
+/* FLIP TO COVER - flip back to front */
+.card-container.flip-to-cover {
+  transform: scale(1);
+}
+
+.card-container.flip-to-cover .card-book {
+  transform: rotateY(0deg);
+}
+
+/* ===========================================
+   COVER (FRONT OF CARD)
+   =========================================== */
+
+.card-cover {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: #ffffff;
+  border-radius: 6px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  backface-visibility: hidden;
+  transition: opacity 0.5s ease, visibility 0s ease 0.5s;
+  z-index: 10;
+}
+
+.card-cover.visible {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.5s ease, visibility 0s ease 0s;
+}
+
+.card-cover.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Cover content */
+.card-content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 30px;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.card-gold-spray {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 150px;
+  background: 
+    radial-gradient(circle at 20% 30%, rgba(212, 168, 83, 0.8) 1.5px, transparent 1.5px),
+    radial-gradient(circle at 40% 20%, rgba(212, 168, 83, 0.6) 2px, transparent 2px),
+    radial-gradient(circle at 60% 35%, rgba(212, 168, 83, 0.7) 1.2px, transparent 1.2px),
+    radial-gradient(circle at 80% 25%, rgba(212, 168, 83, 0.5) 1.8px, transparent 1.8px),
+    radial-gradient(circle at 30% 45%, rgba(212, 168, 83, 0.65) 1.3px, transparent 1.3px),
+    radial-gradient(circle at 70% 40%, rgba(212, 168, 83, 0.55) 1.6px, transparent 1.6px);
+  background-size: 40px 40px, 50px 50px, 35px 35px, 45px 45px, 38px 38px, 42px 42px;
+  pointer-events: none;
+}
+
+.card-header {
+  margin-bottom: auto;
+}
+
+.card-logo-area {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.logo-text {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  color: #1a1a1a;
+  line-height: 1.3;
+}
+
+.card-greeting {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 4px;
+  color: #666;
+  margin-top: 10px;
+}
+
+.card-visual {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.card-year {
+  display: flex;
+  gap: 8px;
+  z-index: 2;
+}
+
+.year-digit {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 72px;
+  font-weight: 700;
+  color: #1a1a1a;
+  line-height: 1;
+}
+
+.year-digit-faded {
+  color: rgba(26, 26, 26, 0.3);
+}
+
+/* Chrome blobs on cover */
+.chrome-blob {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at 30% 30%,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(200, 200, 200, 0.9) 30%,
+    rgba(150, 150, 150, 0.8) 60%,
+    rgba(100, 100, 100, 0.6) 100%
+  );
+  box-shadow: 
+    inset -10px -10px 20px rgba(255, 255, 255, 0.9),
+    inset 8px 8px 15px rgba(0, 0, 0, 0.15),
+    0 5px 20px rgba(100, 100, 100, 0.3);
+}
+
+.chrome-blob-1 {
+  width: 80px;
+  height: 70px;
+  top: 20%;
+  right: 15%;
+}
+
+.chrome-blob-2 {
+  width: 60px;
+  height: 55px;
+  bottom: 25%;
+  left: 10%;
+}
+
+.chrome-blob-3 {
+  width: 50px;
+  height: 45px;
+  bottom: 15%;
+  right: 25%;
+}
+
+/* ===========================================
+   INSIDE PAGES (TWO-PAGE SPREAD)
+   =========================================== */
+
+.card-pages {
+  position: absolute;
+  width: 200%;
+  height: 100%;
+  left: -50%;
+  top: 0;
+  display: flex;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 4px 40px rgba(0, 0, 0, 0.15);
+  transition: opacity 0.5s ease, visibility 0s ease 0.5s;
+  z-index: 5;
+}
+
+.card-pages.visible {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.5s ease, visibility 0s ease 0s;
+}
+
+.card-pages.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Individual pages */
+.card-page {
+  width: 50%;
+  height: 100%;
+  background: #ffffff;
+  position: relative;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+.card-page-left {
+  border-radius: 6px 0 0 6px;
+  border-right: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.card-page-right {
+  border-radius: 0 6px 6px 0;
+}
+
+/* LEFT PAGE - Chrome blobs */
+.page-chrome-blob {
+  position: absolute;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at 35% 35%,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(245, 245, 245, 0.98) 10%,
+    rgba(220, 220, 220, 0.95) 25%,
+    rgba(180, 180, 180, 0.9) 45%,
+    rgba(140, 140, 140, 0.8) 65%,
+    rgba(100, 100, 100, 0.6) 85%,
+    rgba(70, 70, 70, 0.4) 100%
+  );
+  box-shadow: 
+    inset -15px -15px 35px rgba(255, 255, 255, 0.95),
+    inset 12px 12px 25px rgba(0, 0, 0, 0.12),
+    0 8px 30px rgba(120, 120, 120, 0.25);
+  z-index: 2;
+}
+
+.page-blob-1 {
+  width: 100px;
+  height: 90px;
+  top: 10px;
+  left: 20px;
+  border-radius: 45% 55% 50% 50% / 50% 45% 55% 50%;
+  transform: rotate(-10deg);
+}
+
+.page-blob-2 {
+  width: 110px;
+  height: 100px;
+  top: 30px;
+  right: 20px;
+  border-radius: 50% 45% 55% 45% / 45% 50% 50% 55%;
+  transform: rotate(5deg);
+}
+
+.page-blob-3 {
+  width: 90px;
+  height: 85px;
+  top: 50%;
+  right: 30px;
+  transform: translateY(-50%) rotate(-8deg);
+  border-radius: 48% 52% 45% 55% / 52% 48% 52% 48%;
+}
+
+.page-blob-4 {
+  width: 130px;
+  height: 120px;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%) rotate(5deg);
+  border-radius: 50% 50% 45% 55% / 48% 52% 48% 52%;
+}
+
+/* Logo box on left page */
+.page-logo-box {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 15px 22px;
+  border: 1px dashed rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: #1a1a1a;
+  background: rgba(255, 255, 255, 0.85);
+  z-index: 5;
+}
+
+.page-logo-box span {
+  line-height: 1.4;
+}
+
+/* RIGHT PAGE - Message content */
+.page-content-right {
+  padding: 50px 40px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.page-intro {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 2;
+  color: #444;
+  margin-bottom: 35px;
+}
+
+.page-wishes {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 2;
+  color: #444;
+  margin-bottom: 40px;
+}
+
+.page-signature {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  color: #1a1a1a;
+  text-transform: uppercase;
+  margin-top: auto;
+  padding-bottom: 30px;
+}
+
+/* Gold glitter at bottom of pages */
+.pages-gold-glitter {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 120px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.pages-gold-glitter::before {
+  content: '';
+  position: absolute;
+  bottom: 10px;
+  left: 5%;
+  width: 40%;
+  height: 100px;
+  background: 
+    radial-gradient(circle at 15% 85%, rgba(212, 168, 83, 0.9) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 25% 70%, rgba(212, 168, 83, 0.75) 2px, transparent 2px),
+    radial-gradient(circle at 8% 60%, rgba(212, 168, 83, 0.8) 1.8px, transparent 1.8px),
+    radial-gradient(circle at 35% 90%, rgba(212, 168, 83, 0.7) 2.2px, transparent 2.2px),
+    radial-gradient(circle at 20% 55%, rgba(212, 168, 83, 0.65) 1.5px, transparent 1.5px),
+    radial-gradient(circle at 45% 75%, rgba(212, 168, 83, 0.85) 2px, transparent 2px);
+  background-size: 100% 100%;
+}
+
+.pages-gold-glitter::after {
+  content: '';
+  position: absolute;
+  bottom: 10px;
+  right: 5%;
+  width: 40%;
+  height: 100px;
+  background: 
+    radial-gradient(circle at 85% 80%, rgba(212, 168, 83, 0.9) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 70% 65%, rgba(212, 168, 83, 0.75) 2px, transparent 2px),
+    radial-gradient(circle at 92% 55%, rgba(212, 168, 83, 0.8) 1.8px, transparent 1.8px),
+    radial-gradient(circle at 60% 85%, rgba(212, 168, 83, 0.7) 2.2px, transparent 2.2px),
+    radial-gradient(circle at 78% 50%, rgba(212, 168, 83, 0.65) 1.5px, transparent 1.5px),
+    radial-gradient(circle at 55% 70%, rgba(212, 168, 83, 0.85) 2px, transparent 2px);
+  background-size: 100% 100%;
+}
+
+/* ===========================================
+   CARD BACK
+   =========================================== */
+
+.card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  transform: rotateY(180deg);
+  background: #1a365d;
+  border-radius: 6px;
+  z-index: 1;
+}
+
+.card-back-content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+}
+
+.back-logo {
+  font-size: 40px;
+  margin-bottom: 20px;
+  color: #d4a853;
+}
+
+.back-text {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  letter-spacing: 2px;
+  opacity: 0.7;
+}
+
+/* ===========================================
+   ANIMATIONS
+   =========================================== */
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
